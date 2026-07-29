@@ -1,0 +1,324 @@
+{
+  "name": "MVP Educativo",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1cSNUMr2m1QrffWpROh3XHuwigHIOYzHVNOkTDi7u5Wo",
+          "mode": "list",
+          "cachedResultName": "CRM_MVP_Capas_Semanticas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cSNUMr2m1QrffWpROh3XHuwigHIOYzHVNOkTDi7u5Wo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1027678565,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cSNUMr2m1QrffWpROh3XHuwigHIOYzHVNOkTDi7u5Wo/edit#gid=1027678565"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -64
+      ],
+      "id": "a9b10880-5fbe-4b22-8234-0cb1a110a877",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "YwfJb5sktNPdOitz",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Actúa como un Director de Producto Educativo experto en Capas Semánticas y Data Engineering. \n\nRecibiste el registro de un nuevo alumno para nuestro MVP gratuito. \n- Su Nombre es: {{ $json['Nombre y Apellido'] }}\n- Su Rol es: {{ $json['¿Cuál es tu rol actual?'] }}\n- Su Mayor Frustración es: {{ $json['El \"Dolor\"'] }}\n\nTAREA:\nGenerá un mensaje de bienvenida en español (tono profesional pero cercano, estilo argentino, usando \"vos\") que incluya:\n1. Un saludo personalizado usando su nombre.\n2. Una validación empática de su frustración (1 o 2 líneas máximo).\n3. Un \"Tip de Oro\" de 3 líneas sobre cómo empezar a solucionar ese problema específico usando modelado dimensional o capas semánticas.\n4. Cierre invitándolo a revisar el email para la primera sesión.\n5. Agregá al final: \"Para unirte a la comunidad de Data Engineers y seguir debatiendo, usá este link de acceso al Discord: https://discord.gg/wHAYg2NZj\".\n\nFORMATO DE SALIDA:\nDevolvé SOLO el texto plano del mensaje. \n- NO devuelvas JSON, ni llaves {}, ni comillas, ni claves como \"welcome_message\".\n- Usá la etiqueta <br> en lugar de \\n para los saltos de línea (ya que es un email HTML).\n- No uses markdown (ni asteriscos, ni negritas con **)."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        -64
+      ],
+      "id": "c742a03e-3c02-4a04-ad96-a11b1f4c5e8d",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "JPvZHBfn2sihGxjr",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1cSNUMr2m1QrffWpROh3XHuwigHIOYzHVNOkTDi7u5Wo",
+          "mode": "list",
+          "cachedResultName": "CRM_MVP_Capas_Semanticas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cSNUMr2m1QrffWpROh3XHuwigHIOYzHVNOkTDi7u5Wo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1027678565,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cSNUMr2m1QrffWpROh3XHuwigHIOYzHVNOkTDi7u5Wo/edit#gid=1027678565"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Tip_Generado_IA": "= {{ JSON.parse($json.content.parts[0].text)}}",
+            "Correo Electrónico": "={{ $('Google Sheets Trigger').item.json['Correo Electrónico'] }}"
+          },
+          "matchingColumns": [
+            "Correo Electrónico"
+          ],
+          "schema": [
+            {
+              "id": "Marca temporal",
+              "displayName": "Marca temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre y Apellido",
+              "displayName": "Nombre y Apellido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Correo Electrónico",
+              "displayName": "Correo Electrónico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "¿Cuál es tu rol actual?",
+              "displayName": "¿Cuál es tu rol actual?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "El \"Dolor\"",
+              "displayName": "El \"Dolor\"",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Compromiso de Asistencia",
+              "displayName": "Compromiso de Asistencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Columna 6",
+              "displayName": "Columna 6",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tip_Generado_IA",
+              "displayName": "Tip_Generado_IA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        576,
+        -64
+      ],
+      "id": "be9171be-ef9e-4a1c-afb8-36292bc0fe12",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TbDu90vA5PDL2jdj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets Trigger').item.json['Correo Electrónico'] }}",
+        "subject": "=Bienvenido al MVP  {{ $('Google Sheets Trigger').item.json['Nombre y Apellido'] }}. Tu tip personalizado está dentro.",
+        "message": "={{ $json.Tip_Generado_IA }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        32
+      ],
+      "id": "388e21d0-a5d0-4c45-9ec8-4c49395a9afa",
+      "name": "Send a message",
+      "webhookId": "9170ff1f-d10a-4631-bd97-92bdd2ced740",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "mECv3ieVe625aqdP",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=🚀 ¡Nuevo miembro en el MVP! \n   Bienvenido/a  {{ $('Google Sheets Trigger').item.json['Nombre y Apellido'] }}. \n   Le acabamos de enviar un tip personalizado por email. ¡A disfrutar!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -160
+      ],
+      "id": "0f334d6b-15ad-4865-ab39-848cca954c45",
+      "name": "Discord",
+      "webhookId": "26601c45-a8fa-4b5c-9f9a-4efd3d3db7b3",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "hDhsWfxDAvFuJpez",
+          "name": "Discord Webhook account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e45721eb-0cee-43f8-a529-5991443efc91",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4f991dc5507f466012ce58c12e93082d797e0648f78cf2c69439e946f97dd658"
+  },
+  "nodeGroups": [],
+  "id": "ofFv7RAd4ZQrncuR",
+  "tags": []
+}
